@@ -7,6 +7,7 @@ import {
 import type { UsuarioDB, ProyectoDB, TareaDB } from "./types.ts";
 
 const url = Deno.env.get("MONGO_URL");
+
 if (!url) {
   console.error("Error al conectar");
   Deno.exit(1);
