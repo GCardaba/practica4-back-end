@@ -1,3 +1,4 @@
+import "https://deno.land/x/dotenv@v3.2.0/load.ts";
 import { MongoClient, ObjectId } from "mongodb";
 import {
   fromModelToUsuario,
@@ -9,8 +10,7 @@ import type { UsuarioDB, ProyectoDB, TareaDB } from "./types.ts";
 const url = Deno.env.get("MONGO_URL");
 
 if (!url) {
-  console.error("Error al conectar");
-  Deno.exit(1);
+  throw new Error("MONGO_URL no está configurado.");
 }
 
 // Crea y conecta un cliente de MongoDB
@@ -310,7 +310,15 @@ const handler = async (req: Request): Promise<Response> => {
     }
   }
 
-  return new Response("Ruta no encontrada", { status: 404 });
+  return new Response(
+    JSON.stringify({
+      error: "Ruta no encontrada",
+    }),
+    {
+      status: 404,
+      headers: { "Content-Type": "application/json" },
+    }
+  );
 };
 
-Deno.serve({ port: 3000 }, handler);
+Deno.serve({ port: 8000 }, handler);
