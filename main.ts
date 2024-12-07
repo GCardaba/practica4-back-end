@@ -236,18 +236,28 @@ const handler = async (req: Request): Promise<Response> => {
         due_date,
         project_id,
       } = body;
+      const created_at = new Date();
       if (!title || !project_id)
         return new Response("Faltan datos", { status: 400 });
       const { insertedId } = await coleccionTareas.insertOne({
         title,
         description,
         status,
-        created_at: new Date(),
+        created_at,
         due_date: due_date ? new Date(due_date) : undefined,
         project_id: new ObjectId(project_id),
       });
+
       return new Response(
-        JSON.stringify({ id: insertedId.toString(), title }),
+        JSON.stringify({
+          id: insertedId.toString(),
+          title,
+          description,
+          status,
+          created_at,
+          due_date,
+          project_id,
+        }),
         { status: 201 }
       );
     }
